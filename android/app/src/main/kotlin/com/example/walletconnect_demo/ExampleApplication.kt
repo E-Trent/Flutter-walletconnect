@@ -3,7 +3,7 @@ package com.example.walletconnect_demo
 
 import androidx.multidex.MultiDexApplication
 import com.squareup.moshi.Moshi
-import io.walletconnect.example.server.BridgeServer
+import com.example.walletconnect_demo.server.BridgeServer
 import okhttp3.OkHttpClient
 import org.komputing.khex.extensions.toNoPrefixHexString
 import org.walletconnect.Session

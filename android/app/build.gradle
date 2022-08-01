@@ -67,6 +67,19 @@ flutter {
 }
 
 dependencies {
+    implementation "org.java-websocket:Java-WebSocket:1.4.0"
+
+    implementation "com.github.komputing:khex:1.0.0-RC6"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.6'
+    implementation "androidx.multidex:multidex:$versions.multidex"
+    implementation "androidx.appcompat:appcompat:$versions.androidx_app_compat"
+    implementation "androidx.multidex:multidex:$versions.multidex"
+
+    implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0'
+
 }
