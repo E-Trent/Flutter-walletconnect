@@ -15,7 +15,9 @@ import java.util.*
 class ExampleApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
+        println("**@&&#*#(#*#*#(#!(()");
         initMoshi()
+
         initClient()
         initBridge()
         initSessionStorage()
