@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     String androidVersion = await methodChannel.invokeMethod("android_version");
-    print("获取到android的版本是:$androidVersion");
+    print("返回值是:$androidVersion");
   }
 
   @override
