@@ -23,7 +23,8 @@ import WalletConnectSwift
             }
             
             
-              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
+//              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
+              let deepLinkUrl = "imtokenv2://wc?uri=\(connectionUrl)"
                       DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                           if let url = URL(string: deepLinkUrl), UIApplication.shared.canOpenURL(url) {
                               UIApplication.shared.open(url, options: [:], completionHandler: nil)
