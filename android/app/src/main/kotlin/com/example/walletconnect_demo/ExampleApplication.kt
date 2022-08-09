@@ -52,7 +52,7 @@ class ExampleApplication : MultiDexApplication() {
         fun resetSession() {
             nullOnThrow { session }?.clearCallbacks()
             val key = ByteArray(32).also { Random().nextBytes(it) }.toNoPrefixHexString()
-            config = Session.Config(UUID.randomUUID().toString(), "http://localhost:${BridgeServer.PORT}", key)
+            config = Session.Config(UUID.randomUUID().toString(), "https://bridge.walletconnect.org/", key)
             session = WCSession(config,
                     MoshiPayloadAdapter(moshi),
                     storage,
