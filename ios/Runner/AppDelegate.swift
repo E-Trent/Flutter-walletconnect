@@ -4,33 +4,34 @@ import WalletConnectSwift
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     var walletConnect:WalletConnect!
+    var client: Client!
+    var session: Session!
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         walletConnect = WalletConnect(delegate: self)
         walletConnect.reconnectIfNeeded()
+        
         NSLog("开始初始化")
         let connectionUrl = walletConnect.connect()
+        client = walletConnect.client
+        session = walletConnect.session
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let batteryChannel = FlutterMethodChannel(name: "MethodChannelName",
                                                   binaryMessenger: controller.binaryMessenger)
         batteryChannel.setMethodCallHandler({
             (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-            guard call.method == "android_version" else {
+            guard call.method == "android_version"
+            else {
                 result(FlutterMethodNotImplemented)
                 return
             }
+            if(call.method == "walletConnect"){
+                
+            }else if(true){}else{}
             //              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
-            let deepLinkUrl = "imtokenv2://wc?uri=\(connectionUrl)"
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                if let url = URL(string: deepLinkUrl), UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                    NSLog("开始初始化检测支持")
-                } else {
-                    NSLog("开始初始化检测不支持")
-                }
-            }
+            
         })
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -45,7 +46,49 @@ import WalletConnectSwift
             }
         }
     }
+    
+    func customRequest(jsonStr:String){
+        let jsonData:Data = jsonStr.data(using: .utf8)!
+        
+        let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
+        try? client.send(.eth_gasPrice(url: session.url)) { [weak self] response in
+            self?.handleReponse(response, expecting: "Gas Price")
+//            NSLog(response.error, CVarArg)
+        }
+//        return map!
+    }
+    
+    private func handleReponse(_ response: Response, expecting: String) {
+        DispatchQueue.main.async {
+            if let error = response.error {
+                self.show(UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert))
+                return
+            }
+            do {
+                let result = try response.result(as: String.self)
+                self.show(UIAlertController(title: expecting, message: result, preferredStyle: .alert))
+            } catch {
+                self.show(UIAlertController(title: "Error",
+                                            message: "Unexpected response type error: \(error)",
+                                            preferredStyle: .alert))
+            }
+        }
+    }
+    private func show(_ alert: UIAlertController) {
+        alert.addAction(UIAlertAction(title: "Close", style: .cancel))
+//        self.present(alert, animated: true)
+    }
 }
+extension Request {
+    static func eth_getTransactionCount(url: WCURL, account: String) -> Request {
+        return try! Request(url: url, method: "eth_getTransactionCount", params: [account, "latest"])
+    }
+
+    static func eth_gasPrice(url: WCURL) -> Request {
+        return Request(url: url, method: "eth_gasPrice")
+    }
+}
+
 
 extension AppDelegate: WalletConnectDelegate {
     func failedToConnect() {
