@@ -94,6 +94,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
     }
 
     override fun onStatus(status: Session.Status) {
+        println("进入Status");
         when(status) {
             Session.Status.Approved -> sessionApproved()
             Session.Status.Closed -> sessionClosed()
@@ -106,7 +107,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
     }
 
     private fun sessionApproved() {
-
+        println("返回了");
     }
 
     private fun sessionClosed() {

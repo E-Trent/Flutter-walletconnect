@@ -50,11 +50,16 @@ import WalletConnectSwift
     func customRequest(jsonStr:String){
         let jsonData:Data = jsonStr.data(using: .utf8)!
         
-        let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-        try? client.send(.eth_gasPrice(url: session.url)) { [weak self] response in
+        let dict =  try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? Dictionary<String, Any>
+
+        try? client.send(.eth_custom(url: session.url,methods:dict?["method"] as! String,param:dict?["params"] as! String)) { [weak self] response in
             self?.handleReponse(response, expecting: "Gas Price")
 //            NSLog(response.error, CVarArg)
         }
+//        try? client.send(Request(url: session.url, method: "", params: [])){ [weak self] response in
+//            self?.handleReponse(response, expecting: "Gas Price")
+////            NSLog(response.error, CVarArg)
+//        }
 //        return map!
     }
     
@@ -86,6 +91,10 @@ extension Request {
 
     static func eth_gasPrice(url: WCURL) -> Request {
         return Request(url: url, method: "eth_gasPrice")
+    }
+    
+    static func eth_custom(url:WCURL,methods:String,param:String) -> Request{
+        return try! Request(url: url, method: methods, params: [param])
     }
 }
 
