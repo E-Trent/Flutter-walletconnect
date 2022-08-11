@@ -5,6 +5,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import android.content.Intent
 import android.net.Uri
+import android.view.View
 import com.example.walletconnect_demo.server.BridgeServer
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,8 @@ import org.walletconnect.impls.*
 import org.walletconnect.nullOnThrow
 import java.io.File
 import java.util.*
+import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 
 class MainActivity : FlutterActivity(),Session.Callback {
@@ -112,5 +115,31 @@ class MainActivity : FlutterActivity(),Session.Callback {
 
     private fun sessionClosed() {
 
+    }
+
+    ///解析庄给的json字符串  并且使用custom方法发送给钱包
+    fun sendCustomMessage(jsonStr:String){
+        ///解析成实体类
+       var str = Gson().fromJson(jsonStr,argsModel::class.java);
+        session.performMethodCall(
+            Session.MethodCall.Custom(
+                System.currentTimeMillis(),
+                 str.method!!,
+               str.params!!,
+            ),
+            ::handleResponse
+        )
+
+    }
+    private fun handleResponse(resp: Session.MethodCall.Response) {
+       println(resp.result as? String)
+    }
+}
+class argsModel {
+    var method: String? = null
+    var params: List<Any>? = null
+
+    override fun toString(): String {
+        return "argsModel(method=$method, params=$params)"
     }
 }
