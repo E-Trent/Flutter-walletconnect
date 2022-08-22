@@ -20,16 +20,27 @@ import WalletConnectSwift
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let batteryChannel = FlutterMethodChannel(name: "MethodChannelName",
                                                   binaryMessenger: controller.binaryMessenger)
-        batteryChannel.setMethodCallHandler({
+        batteryChannel.setMethodCallHandler({ [self]
             (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
-            guard call.method == "android_version"
-            else {
-                result(FlutterMethodNotImplemented)
-                return
-            }
+//            guard call.method == "android_version"
+//            else {
+//                result(FlutterMethodNotImplemented)
+//                return
+//            }
             if(call.method == "walletConnect"){
-                
-            }else if(true){}else{}
+                let deepLinkUrl = "imtokenv2://wc?uri=\(connectionUrl)"
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    if let url = URL(string: deepLinkUrl), UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                        NSLog("开始初始化检测支持")
+                    } else {
+                        NSLog("开始初始化检测不支持")
+                    }
+                }
+                result("abc")
+            }else if(call.method == "sendMessage"){
+//                self.customRequests(jsonStr:"{\"method\": \"personal_sign\",\"params\": [\"0x49206861766520313030e282ac\",\"0x2eB535d54382eA5CED9183899916A9d39e093877\"]}",wcurl: session.url)
+            }else{}
             //              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
             
         })
@@ -47,12 +58,12 @@ import WalletConnectSwift
         }
     }
     
-    func customRequest(jsonStr:String){
+    func customRequests(jsonStr:String,wcurl:WCURL){
         let jsonData:Data = jsonStr.data(using: .utf8)!
         
         let dict =  try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? Dictionary<String, Any>
 
-        try? client.send(.eth_custom(url: session.url,methods:dict?["method"] as! String,param:dict?["params"] as! String)) { [weak self] response in
+        try? client.send(.eth_custom(url: wcurl,methods:dict?["method"] as! String,param:dict?["params"] as! String)) { [weak self] response in
             self?.handleReponse(response, expecting: "Gas Price")
 //            NSLog(response.error, CVarArg)
         }

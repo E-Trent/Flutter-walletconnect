@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
 
-    String androidVersion = await methodChannel.invokeMethod("android_version");
+    String androidVersion = await methodChannel.invokeMethod("walletConnect");
     print("返回值是:$androidVersion");
   }
 
@@ -106,9 +106,12 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            GestureDetector(
+              onTap: () async => await methodChannel.invokeMethod("sendMessage"),
+              child: Text(
+                '$_counter',
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ],
         ),
