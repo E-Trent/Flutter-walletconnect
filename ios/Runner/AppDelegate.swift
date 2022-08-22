@@ -40,6 +40,9 @@ import WalletConnectSwift
                 result("abc")
             }else if(call.method == "sendMessage"){
                 self.customRequests(jsonStr:"{\"method\": \"personal_sign\",\"params\": [\"0x49206861766520313030e282ac\",\"0x2eB535d54382eA5CED9183899916A9d39e093877\"]}",wcurl: walletConnect.session.url)
+                let deepLinkUrl = "imtokenv2://wc?uri=\(connectionUrl)"
+                let url = URL(string: deepLinkUrl)
+                UIApplication.shared.open(url!, options: [:], completionHandler: nil)
 //                NSLog(session.url.absoluteString)
             }else{}
             //              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
