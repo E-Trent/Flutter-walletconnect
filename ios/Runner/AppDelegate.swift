@@ -39,7 +39,8 @@ import WalletConnectSwift
                 }
                 result("abc")
             }else if(call.method == "sendMessage"){
-//                self.customRequests(jsonStr:"{\"method\": \"personal_sign\",\"params\": [\"0x49206861766520313030e282ac\",\"0x2eB535d54382eA5CED9183899916A9d39e093877\"]}",wcurl: session.url)
+                self.customRequests(jsonStr:"{\"method\": \"personal_sign\",\"params\": [\"0x49206861766520313030e282ac\",\"0x2eB535d54382eA5CED9183899916A9d39e093877\"]}",wcurl: walletConnect.session.url)
+//                NSLog(session.url.absoluteString)
             }else{}
             //              let deepLinkUrl = "wc://wc?uri=\(connectionUrl)"
             
@@ -63,7 +64,7 @@ import WalletConnectSwift
         
         let dict =  try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? Dictionary<String, Any>
 
-        try? client.send(.eth_custom(url: wcurl,methods:dict?["method"] as! String,param:dict?["params"] as! String)) { [weak self] response in
+        try? client.send(.eth_custom(url: wcurl,methods:dict?["method"] as! String,param:dict?["params"] as! Array<String>)) { [weak self] response in
             self?.handleReponse(response, expecting: "Gas Price")
 //            NSLog(response.error, CVarArg)
         }
@@ -104,8 +105,8 @@ extension Request {
         return Request(url: url, method: "eth_gasPrice")
     }
     
-    static func eth_custom(url:WCURL,methods:String,param:String) -> Request{
-        return try! Request(url: url, method: methods, params: [param])
+    static func eth_custom(url:WCURL,methods:String,param:Array<String>) -> Request{
+        return try! Request(url: url, method: methods, params: param)
     }
 }
 
@@ -118,7 +119,7 @@ extension AppDelegate: WalletConnectDelegate {
     
     func didConnect() {
         onMainThread { [unowned self] in
-            
+            print("session+++++==============\(walletConnect.session.url)")
             NSLog("didConnect")
         }
     }

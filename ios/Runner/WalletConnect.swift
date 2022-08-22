@@ -76,6 +76,7 @@ extension WalletConnect: ClientDelegate {
 
     func client(_ client: Client, didConnect session: Session) {
         self.session = session
+        print("session+++___++_\(session.url)")
         let sessionData = try! JSONEncoder().encode(session)
         UserDefaults.standard.set(sessionData, forKey: sessionKey)
         delegate.didConnect()
