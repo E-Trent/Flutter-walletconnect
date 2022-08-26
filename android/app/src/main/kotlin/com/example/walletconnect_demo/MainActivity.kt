@@ -42,15 +42,28 @@ class MainActivity : FlutterActivity(),Session.Callback {
             MethodChannel(it.binaryMessenger, "MethodChannelName").setMethodCallHandler {
                     call,
                     result ->
-                if (call.method == "android_version") {
+                print(call.method)
+                if (call.method == "walletConnect") {
                     resetSession()
                     session.addCallback(this)
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(config.toWCUri())
                     startActivity(i)
-                    result.success("Android ${android.os.Build.VERSION.RELEASE}")
-                } else {
-                    result.notImplemented()
+                    result.success("Android!@@*#&#^^#")
+                }else if(call.method == "sendMessage") {
+                    ///字符串
+                    var str  = "{\"method\": \"personal_sign\",\"params\": [\"0x49206861766520313030e282ac\",\"0x2eB535d54382eA5CED9183899916A9d39e093877\"]}";
+                    ///发送请求
+                    sendCustomMessage(str);
+                    ///打开链接
+                    val i = Intent(Intent.ACTION_VIEW)
+                    i.data = Uri.parse(config.toWCUri())
+                    startActivity(i)
+                    result.success("Android!@@*#&#^^#")
+                }else {
+                    print(call.method)
+                    // result.notImplemented()
+                    result.success("找不到对应method")
                 }
             }
         }
