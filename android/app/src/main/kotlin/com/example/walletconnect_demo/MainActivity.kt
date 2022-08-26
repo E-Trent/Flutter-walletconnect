@@ -56,10 +56,10 @@ class MainActivity : FlutterActivity(),Session.Callback {
                     ///发送请求
                     sendCustomMessage(str);
                     ///打开链接
-                    val i = Intent(Intent.ACTION_VIEW)
-                    i.data = Uri.parse(config.toWCUri())
-                    startActivity(i)
-                    result.success("Android!@@*#&#^^#")
+//                    val i = Intent(Intent.ACTION_VIEW)
+//                    i.data = Uri.parse(config.toWCUri())
+//                    startActivity(i)
+//                    result.success("Android!@@*#&#^^#")
                 }else {
                     print(call.method)
                     // result.notImplemented()
