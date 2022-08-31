@@ -15,6 +15,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		C398668B289FF77100DCC4E3 /* WalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C398668A289FF77100DCC4E3 /* WalletConnect.swift */; };
+		D6626EC728BF48DB001BE804 /* myWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6626EC628BF48DB001BE804 /* myWalletConnect.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +49,7 @@
 		C398668A289FF77100DCC4E3 /* WalletConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnect.swift; sourceTree = "<group>"; };
 		C40E687764B42ADEFCEAE981 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		D05C343B5F1A2ADF2CFA6DC6 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		D6626EC628BF48DB001BE804 /* myWalletConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = myWalletConnect.swift; sourceTree = "<group>"; };
 		E83E813B7B4ECC7D50547DE0 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				C398668A289FF77100DCC4E3 /* WalletConnect.swift */,
+				D6626EC628BF48DB001BE804 /* myWalletConnect.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				D6626EC728BF48DB001BE804 /* myWalletConnect.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				C398668B289FF77100DCC4E3 /* WalletConnect.swift in Sources */,
 			);
