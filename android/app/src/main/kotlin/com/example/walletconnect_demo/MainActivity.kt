@@ -29,7 +29,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
     private lateinit var bridge: BridgeServer
     private lateinit var storage: WCSessionStore
     lateinit var config: Session.Config
-    lateinit var session: Session
+    lateinit var sessions: Session
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("oncreate:**@&&#*#(#*#*#(#!(()")
@@ -37,7 +37,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
         initClient()
         initBridge()
         initSessionStorage()
-//        initialSetup()
+        initialSetup()
         flutterEngine?.dartExecutor?.let {
             MethodChannel(it.binaryMessenger, "MethodChannelName").setMethodCallHandler {
                     call,
@@ -45,7 +45,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
                 print(call.method)
                 if (call.method == "walletConnect") {
                     resetSession()
-                    session.addCallback(this)
+                    sessions.addCallback(this)
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(config.toWCUri())
                     startActivity(i)
@@ -93,16 +93,17 @@ class MainActivity : FlutterActivity(),Session.Callback {
     }
 
     private fun resetSession() {
-        nullOnThrow { session }?.clearCallbacks()
+//        nullOnThrow { sessions }?.clearCallbacks()
         val key = ByteArray(32).also { Random().nextBytes(it) }.toNoPrefixHexString()
-        config = Session.Config(UUID.randomUUID().toString(), "https://bridge.walletconnect.org/", key)
-        session = WCSession(config,
+        config =  Session.Config(UUID.randomUUID().toString(), "https://bridge.walletconnect.org/", key)
+        var d = config.toFullyQualifiedConfig();
+        sessions = WCSession(d,
             MoshiPayloadAdapter(moshi),
             storage,
             OkHttpTransport.Builder(client, moshi),
             Session.PeerMeta(name = "Example App")
         )
-        session.offer()
+        sessions.offer()
     }
 
     override fun onMethodCall(call: Session.MethodCall) {
@@ -112,18 +113,28 @@ class MainActivity : FlutterActivity(),Session.Callback {
     override fun onStatus(status: Session.Status) {
         println("进入Status");
         when(status) {
-            Session.Status.Approved -> sessionApproved()
+            Session.Status.Approved -> {
+                println("返回生命周期");
+            }
             Session.Status.Closed -> sessionClosed()
             Session.Status.Connected,
             Session.Status.Disconnected,
             is Session.Status.Error -> {
                 // Do Stuff
+                println("status错误")
             }
         }
     }
+    private fun initialSetup() {
+        println("进入了initialSetup")
+        val session = nullOnThrow { sessions } ?: return
+        session.addCallback(this)
+        sessionApproved()
+    }
 
     private fun sessionApproved() {
-        println("返回了");
+        println("返回了"+sessions.approvedAccounts());
+
     }
 
     private fun sessionClosed() {
@@ -132,17 +143,35 @@ class MainActivity : FlutterActivity(),Session.Callback {
 
     ///解析庄给的json字符串  并且使用custom方法发送给钱包
     fun sendCustomMessage(jsonStr:String){
-        ///解析成实体类
-       var str = Gson().fromJson(jsonStr,argsModel::class.java);
-        session.performMethodCall(
-            Session.MethodCall.Custom(
-                System.currentTimeMillis(),
-                 str.method!!,
-               str.params!!,
-            ),
-            ::handleResponse
-        )
-
+        println("进入了");
+        try {
+            ///解析成实体类
+            var str = Gson().fromJson(jsonStr, argsModel::class.java)
+            println(sessions.approvedAccounts());
+            val from = sessions.approvedAccounts()?.first()!!
+            val txRequest = System.currentTimeMillis()
+            val gasPrice = "0x02540be400"
+            val gasLimit = "0x9c40"
+            sessions.performMethodCall(
+                Session.MethodCall.SendTransaction(
+                    id = txRequest,
+                    from = from,
+                    to = from,
+                    nonce = "0x0114",
+                    gasPrice = gasPrice,
+                    gasLimit = gasLimit,
+                    value = "0x00",
+                    data = "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675"
+                ),
+                ::handleResponse
+            )
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse("wc:")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }catch (e:Exception){
+            println("onStart: screenMainTxButton:${e.message}")
+        }
     }
     private fun handleResponse(resp: Session.MethodCall.Response) {
        println(resp.result as? String)
@@ -150,7 +179,7 @@ class MainActivity : FlutterActivity(),Session.Callback {
 }
 class argsModel {
     var method: String? = null
-    var params: List<Any>? = null
+    var params: List<*>? = null
 
     override fun toString(): String {
         return "argsModel(method=$method, params=$params)"

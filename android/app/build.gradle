@@ -71,7 +71,7 @@ dependencies {
 
     implementation "com.github.komputing:khex:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
-    implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.6'
+    implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.9'
     implementation "androidx.multidex:multidex:2.0.1"
     implementation "androidx.appcompat:appcompat:1.4.1"
 

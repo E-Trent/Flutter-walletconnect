@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentHashMap
 class BridgeServer(moshi: Moshi) : WebSocketServer(InetSocketAddress(PORT)) {
 
     private val adapter = moshi.adapter<Map<String, String>>(
-            Types.newParameterizedType(
-                    Map::class.java,
-                    String::class.java,
-                    String::class.java
-            )
+        Types.newParameterizedType(
+            Map::class.java,
+            String::class.java,
+            String::class.java
+        )
     )
 
     private val pubs: MutableMap<String, MutableList<WeakReference<WebSocket>>> = ConcurrentHashMap()
